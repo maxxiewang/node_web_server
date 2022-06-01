@@ -1,16 +1,21 @@
+const { login } = require('../controller/user')
+const { SuccessModel, ErrorModel } = require('../model/resModel')
+
 const handleUserRouter = (req, res) => {
   const method = req.method
-  const url = req.url
-  const path = url.split('?')[0]
 
-  if (method === 'POST' && path === '/api/user/new') {
+  if (method === 'POST' && req.path === '/api/user/new') {
     return {
       msg: 'this is new a user',
     }
   }
-  if (method === 'POST' && path === '/api/user/login') {
-    return {
-      msg: 'this is login api',
+  if (method === 'POST' && req.path === '/api/user/login') {
+    const { username, password } = req.body
+    const res = login(username, password)
+    if (res) {
+      return new SuccessModel(`${username}登录成功`)
+    } else {
+      return new ErrorModel('登录失败')
     }
   }
 }
